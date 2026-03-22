@@ -5,14 +5,10 @@ import type { LabelsResponse, SearchRequest, SearchResponse } from './types';
 const BASE = `/api/plugins/${PLUGIN_ID}/resources`;
 
 export async function search(req: SearchRequest): Promise<SearchResponse> {
-  return getBackendSrv()
-    .post<SearchResponse>(`${BASE}/search`, req)
-    .toPromise();
+  return getBackendSrv().post<SearchResponse>(`${BASE}/search`, req);
 }
 
 export async function getLabelValues(labelName: string): Promise<string[]> {
-  const resp = await getBackendSrv()
-    .get<LabelsResponse>(`${BASE}/labels`, { name: labelName })
-    .toPromise();
+  const resp = await getBackendSrv().get<LabelsResponse>(`${BASE}/labels`, { name: labelName });
   return resp.values;
 }
