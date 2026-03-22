@@ -27,6 +27,7 @@ export function NeutrinoDrawer({ timeRange, datasourceUid, onDismiss }: Props) {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<LogResult[]>([]);
   const [totalFetched, setTotalFetched] = useState(0);
+  const [truncated, setTruncated] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
   const handleSearch = async (query: string) => {
@@ -43,6 +44,7 @@ export function NeutrinoDrawer({ timeRange, datasourceUid, onDismiss }: Props) {
       });
       setResults(resp.results);
       setTotalFetched(resp.total_fetched);
+      setTruncated(resp.truncated);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unknown error';
       setError(msg);
@@ -67,6 +69,7 @@ export function NeutrinoDrawer({ timeRange, datasourceUid, onDismiss }: Props) {
       <ResultsList
         results={results}
         totalFetched={totalFetched}
+        truncated={truncated}
         datasourceUid={datasourceUid ?? ''}
         error={error}
       />

@@ -7,6 +7,7 @@ import { buildExploreUrl } from '../utils/logql';
 interface Props {
   results: LogResult[];
   totalFetched: number;
+  truncated: boolean;
   datasourceUid: string;
   error?: string;
 }
@@ -31,7 +32,7 @@ function LabelChips({ labels }: { labels: Record<string, string> }) {
   );
 }
 
-export function ResultsList({ results, totalFetched, datasourceUid, error }: Props) {
+export function ResultsList({ results, totalFetched, truncated, datasourceUid, error }: Props) {
   if (error) {
     return <Alert title="Search failed" severity="error">{error}</Alert>;
   }
@@ -50,6 +51,11 @@ export function ResultsList({ results, totalFetched, datasourceUid, error }: Pro
 
   return (
     <div>
+      {truncated && (
+        <Alert title="Log limit reached" severity="warning" style={{ marginBottom: 8 }}>
+          Only the most recent {totalFetched.toLocaleString()} lines were searched. Narrow your time range or filters to avoid missing results.
+        </Alert>
+      )}
       <div style={{ marginBottom: 8, opacity: 0.6, fontSize: 12 }}>
         Top {results.length} of {totalFetched.toLocaleString()} log lines
       </div>

@@ -17,6 +17,7 @@ export interface LogResult {
 export interface SearchResponse {
   results: LogResult[];
   total_fetched: number;
+  truncated: boolean;
 }
 
 export interface LabelsResponse {

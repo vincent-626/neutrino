@@ -97,7 +97,11 @@ async def search(
         for rank, i in enumerate(idx)
     ]
 
-    return SearchResponse(results=results, total_fetched=len(raw_lines))
+    return SearchResponse(
+        results=results,
+        total_fetched=len(raw_lines),
+        truncated=len(raw_lines) >= settings.max_log_lines,
+    )
 
 
 @router.get("/labels", response_model=LabelsResponse)

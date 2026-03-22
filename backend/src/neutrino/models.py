@@ -21,6 +21,7 @@ class LogResult(BaseModel):
 class SearchResponse(BaseModel):
     results: list[LogResult]
     total_fetched: int
+    truncated: bool = False
 
 
 class LabelsResponse(BaseModel):
