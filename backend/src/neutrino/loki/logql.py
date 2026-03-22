@@ -22,7 +22,7 @@ def build_query(
     if selectors:
         stream = "{" + ", ".join(selectors) + "}"
     else:
-        stream = "{}"
+        stream = '{job=~".+"}'
 
     pipeline_parts: list[str] = []
 

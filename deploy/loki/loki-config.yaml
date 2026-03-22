@@ -38,3 +38,4 @@ ruler:
 
 limits_config:
   allow_structured_metadata: false
+  max_entries_limit_per_query: 10000
