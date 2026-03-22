@@ -41,7 +41,7 @@ services:
     environment:
       LOKI_URL: http://loki:3100
       CACHE_TTL_SECONDS: "21600"
-      MAX_LOG_LINES: "1000"
+      MAX_LOG_LINES: "5000"
       TOP_K: "25"
     ports:
       - "8400:8400"
