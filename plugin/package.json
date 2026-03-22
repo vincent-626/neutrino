@@ -1,0 +1,27 @@
+{
+  "name": "neutrino-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@grafana/data": "10.4.0",
+    "@grafana/runtime": "10.4.0",
+    "@grafana/ui": "10.4.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tslib": "2.6.2"
+  },
+  "devDependencies": {
+    "@types/react": "18.2.55",
+    "@types/react-dom": "18.2.19",
+    "@types/node": "20.11.5",
+    "@vitejs/plugin-react": "4.2.1",
+    "typescript": "5.3.3",
+    "vite": "5.1.4",
+    "vite-plugin-static-copy": "1.0.2"
+  }
+}

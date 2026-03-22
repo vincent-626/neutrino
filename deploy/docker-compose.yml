@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+  loki:
+    image: grafana/loki:3.0.0
+    command: -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/config.yaml:ro
+      - loki-data:/loki
+    ports:
+      - "3100:3100"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3100/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  promtail:
+    image: grafana/promtail:3.0.0
+    command: -config.file=/etc/promtail/config.yaml
+    volumes:
+      - ./promtail/promtail-config.yaml:/etc/promtail/config.yaml:ro
+      - /var/log:/var/log:ro
+    depends_on:
+      loki:
+        condition: service_healthy
+
+  flog:
+    image: mingrammer/flog:0.4.3
+    command: -f json -d 500ms -l
+    labels:
+      - "logging=flog"
+    depends_on:
+      loki:
+        condition: service_healthy
+
+  neutrino-backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    environment:
+      LOKI_URL: http://loki:3100
+      CACHE_TTL_SECONDS: "21600"
+      MAX_LOG_LINES: "10000"
+      TOP_K: "25"
+    ports:
+      - "8400:8400"
+    depends_on:
+      loki:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8400/readyz')\""]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+  grafana:
+    image: grafana/grafana:10.4.0
+    environment:
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: neutrino-app
+      NEUTRINO_BACKEND_URL: http://neutrino-backend:8400
+    volumes:
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../plugin/dist:/var/lib/grafana/plugins/neutrino-app:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      loki:
+        condition: service_healthy
+      neutrino-backend:
+        condition: service_healthy
+
+volumes:
+  loki-data:
+  grafana-data:

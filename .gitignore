@@ -1,0 +1,51 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+*.egg
+.eggs/
+.venv/
+venv/
+env/
+.env
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# ── Node / TypeScript ─────────────────────────────────────────────────────────
+node_modules/
+plugin/dist/
+*.tsbuildinfo
+
+# ── Go ────────────────────────────────────────────────────────────────────────
+# Keep go.sum (it should be committed)
+# Compiled binaries
+plugin/dist/gpx_*
+
+# ── Grafana plugin build artifacts ───────────────────────────────────────────
+plugin/dist/
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+deploy/grafana/data/
+deploy/loki/data/
+
+# ── OS / editor ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ── Sentence Transformers model cache (if downloaded locally) ─────────────────
+.cache/
+~/.cache/huggingface/

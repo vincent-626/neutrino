@@ -1,0 +1,27 @@
+{
+  "type": "app",
+  "name": "Neutrino",
+  "id": "neutrino-app",
+  "info": {
+    "description": "Semantic search for Grafana Loki — find logs by meaning, not just keywords.",
+    "author": {
+      "name": "Neutrino"
+    },
+    "keywords": ["loki", "semantic search", "logs", "nlp"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "version": "0.1.0",
+    "updated": "2024-01-01"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=10.0.0",
+    "grafanaVersion": "10.0.0",
+    "plugins": []
+  },
+  "preload": true,
+  "backend": true,
+  "executable": "gpx_neutrino",
+  "roles": []
+}
