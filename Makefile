@@ -1,10 +1,19 @@
 .PHONY: dev dev-native dev-plugin run-backend \
-        build-backend-plugin build-plugin dist test-backend
+        build-backend-plugin build-backend-plugin-all build-plugin dist test-backend
+
+# Detect host architecture to match the Docker container platform.
+# On Apple Silicon (arm64) Docker runs linux/arm64; on x86 it runs linux/amd64.
+HOST_ARCH := $(shell uname -m)
+ifeq ($(HOST_ARCH),arm64)
+  MAGE_TARGET := linuxARM64
+else
+  MAGE_TARGET := linux
+endif
 
 # ── Dev targets ──────────────────────────────────────────────────────────────
 
-## Start full stack: Loki, Grafana, flog, promtail, neutrino backend (all Docker)
-dev:
+## Build dist then start the full stack in Docker
+dev: dist
 	docker compose -f deploy/docker-compose.yml up
 
 ## Start only Loki, flog, promtail in Docker (run backend + plugin natively)
@@ -21,15 +30,19 @@ run-backend:
 
 # ── Build targets ─────────────────────────────────────────────────────────────
 
-## Build Go plugin binaries for linux/amd64 and linux/arm64
+## Build Go plugin binary for the current host architecture only (faster)
 build-backend-plugin:
+	cd plugin && mage $(MAGE_TARGET)
+
+## Build Go plugin binaries for both linux/amd64 and linux/arm64
+build-backend-plugin-all:
 	cd plugin && mage linux && mage linuxARM64
 
 ## Build TypeScript frontend
 build-plugin:
 	cd plugin && pnpm run build
 
-## Full dist build: linux Go binary + frontend bundle
+## Full dist build: Go binary for host arch + frontend bundle
 dist: build-backend-plugin build-plugin
 
 # ── Test targets ─────────────────────────────────────────────────────────────
