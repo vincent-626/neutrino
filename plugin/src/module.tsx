@@ -1,11 +1,10 @@
 import React from 'react';
-import { AppPlugin } from '@grafana/data';
+import { AppPlugin, DataQuery, RawTimeRange } from '@grafana/data';
 import { NeutrinoDrawer } from './components/NeutrinoDrawer';
-import type { TimeRange } from '@grafana/data';
 
 interface ExploreToolbarActionContext {
-  timeRange: TimeRange;
-  datasourceUid?: string;
+  timeRange: RawTimeRange;
+  targets?: DataQuery[];
 }
 
 export const plugin = new AppPlugin().configureExtensionLink<ExploreToolbarActionContext>({
@@ -14,16 +13,14 @@ export const plugin = new AppPlugin().configureExtensionLink<ExploreToolbarActio
   description: 'Semantic log search',
   onClick: (_, helpers) => {
     const context = helpers.context;
-    if (!context?.datasourceUid) {
-      return;
-    }
+    const datasourceUid = (context?.targets?.[0]?.datasource as { uid?: string } | undefined)?.uid;
 
     helpers.openModal({
       title: 'Neutrino — Semantic Log Search',
       body: ({ onDismiss }) => (
         <NeutrinoDrawer
-          timeRange={context.timeRange}
-          datasourceUid={context.datasourceUid!}
+          timeRange={context?.timeRange}
+          datasourceUid={datasourceUid}
           onDismiss={onDismiss}
         />
       ),

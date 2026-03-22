@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { TimeRange } from '@grafana/data';
-import { HorizontalGroup } from '@grafana/ui';
+import { RawTimeRange, dateTimeParse } from '@grafana/data';
+import { Alert, HorizontalGroup } from '@grafana/ui';
 import { ServiceSelector } from './ServiceSelector';
 import { SeverityFilter } from './SeverityFilter';
 import { QueryInput } from './QueryInput';
@@ -9,15 +9,19 @@ import { search } from '../api';
 import type { LogResult } from '../types';
 
 interface Props {
-  timeRange: TimeRange;
-  datasourceUid: string;
+  timeRange?: RawTimeRange;
+  datasourceUid?: string;
+  onDismiss?: () => void;
 }
 
-function toNs(ms: number): number {
-  return ms * 1_000_000;
+function toNs(raw: string | number | undefined): number {
+  if (!raw) {
+    return Date.now() * 1_000_000;
+  }
+  return dateTimeParse(raw).valueOf() * 1_000_000;
 }
 
-export function NeutrinoDrawer({ timeRange, datasourceUid }: Props) {
+export function NeutrinoDrawer({ timeRange, datasourceUid, onDismiss }: Props) {
   const [service, setService] = useState<string | undefined>(undefined);
   const [severity, setSeverity] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -34,8 +38,8 @@ export function NeutrinoDrawer({ timeRange, datasourceUid }: Props) {
         query,
         service: service || undefined,
         severity: severity || undefined,
-        start_ns: toNs(timeRange.from.valueOf()),
-        end_ns: toNs(timeRange.to.valueOf()),
+        start_ns: toNs(timeRange?.from as string | number | undefined),
+        end_ns: toNs(timeRange?.to as string | number | undefined),
       });
       setResults(resp.results);
       setTotalFetched(resp.total_fetched);
@@ -46,6 +50,10 @@ export function NeutrinoDrawer({ timeRange, datasourceUid }: Props) {
       setLoading(false);
     }
   };
+
+  if (!timeRange) {
+    return <Alert title="No time range" severity="error">Neutrino requires a time range. Set one in the Explore toolbar and try again.</Alert>;
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 8 }}>
@@ -59,7 +67,7 @@ export function NeutrinoDrawer({ timeRange, datasourceUid }: Props) {
       <ResultsList
         results={results}
         totalFetched={totalFetched}
-        datasourceUid={datasourceUid}
+        datasourceUid={datasourceUid ?? ''}
         error={error}
       />
     </div>
