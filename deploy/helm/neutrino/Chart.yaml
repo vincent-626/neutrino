@@ -1,0 +1,16 @@
+apiVersion: v2
+name: neutrino
+description: Semantic log search for Grafana Loki
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - grafana
+  - loki
+  - semantic-search
+  - observability
+home: https://github.com/vincent-626/neutrino
+sources:
+  - https://github.com/vincent-626/neutrino
+maintainers:
+  - name: Vincent Tee

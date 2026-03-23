@@ -27,7 +27,21 @@ The query pipeline:
 
 ---
 
-## Getting started
+## Installation
+
+### Helm (Kubernetes)
+
+```bash
+helm install neutrino oci://ghcr.io/vincent-626/charts/neutrino \
+  --namespace monitoring \
+  --set loki.url=http://loki.monitoring.svc.cluster.local:3100
+```
+
+Then set `NEUTRINO_BACKEND_URL` on your Grafana deployment to the URL printed in the install notes, and install the Neutrino app plugin into Grafana.
+
+To customise, copy [`deploy/helm/neutrino/values.yaml`](deploy/helm/neutrino/values.yaml) and pass it with `-f`.
+
+### Local / Docker Compose
 
 **Prerequisites:** Docker, Go 1.22+, [Mage](https://magefile.org/), Node.js 20+, pnpm
 

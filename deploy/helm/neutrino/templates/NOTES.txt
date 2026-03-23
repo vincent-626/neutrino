@@ -1,0 +1,19 @@
+Neutrino has been deployed.
+
+Backend URL (for Grafana):
+  http://{{ include "neutrino.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+
+To finish setup, configure the Grafana plugin:
+
+  1. Install the Neutrino app plugin into Grafana
+  2. Set the following environment variable on your Grafana deployment:
+
+       NEUTRINO_BACKEND_URL=http://{{ include "neutrino.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+
+  3. Enable the plugin in Grafana → Administration → Plugins → Neutrino
+
+Once enabled, Neutrino appears in the Add dropdown in Grafana Explore.
+
+To check backend health:
+  kubectl exec -n {{ .Release.Namespace }} deploy/{{ include "neutrino.fullname" . }} -- \
+    wget -qO- http://localhost:{{ .Values.service.port }}/readyz
