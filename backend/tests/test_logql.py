@@ -3,7 +3,7 @@ from neutrino.loki.logql import build_query
 
 
 def test_no_filters():
-    assert build_query() == "{}"
+    assert build_query() == '{job=~".+"}'
 
 
 def test_service_only():

@@ -20,8 +20,7 @@ def client():
     search.init(engine=engine, cache=cache, loki=loki)
     health.set_ready(True)
 
-    with TestClient(app) as c:
-        yield c, engine, loki
+    yield TestClient(app), engine, loki
 
 
 def test_healthz(client):
@@ -40,8 +39,7 @@ def test_readyz_when_ready(client):
 
 def test_readyz_when_not_ready():
     health.set_ready(False)
-    with TestClient(app) as c:
-        resp = c.get("/readyz")
+    resp = TestClient(app).get("/readyz")
     assert resp.status_code == 503
     health.set_ready(True)
 
