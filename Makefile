@@ -26,7 +26,7 @@ dev-plugin:
 
 ## Run Python backend locally with hot reload
 run-backend:
-	cd backend && PYTHONPATH=src uvicorn neutrino.main:app --host 0.0.0.0 --port 8400 --reload
+	cd backend && uv run uvicorn neutrino.main:app --host 0.0.0.0 --port 8400 --reload
 
 # ── Build targets ─────────────────────────────────────────────────────────────
 
@@ -49,4 +49,4 @@ dist: build-backend-plugin build-plugin
 
 ## Run Python backend tests
 test-backend:
-	cd backend && PYTHONPATH=src pytest tests/ -v
+	cd backend && uv run pytest tests/ -v
