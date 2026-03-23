@@ -37,6 +37,9 @@ plugin/dist/
 deploy/grafana/data/
 deploy/loki/data/
 
+# ── Claude Code ──────────────────────────────────────────────────────────────
+.claude/
+
 # ── OS / editor ───────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
